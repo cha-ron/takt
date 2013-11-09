@@ -1,0 +1,52 @@
+major features:
+	rules:
+		- universe definition
+			establishes the environment in which everything happens: what features exist, what values of features are available for a given segment to express, a hierarchy of natural classes
+		- sound change definitions
+			basically just context-sensitive-grammar rewrite rules, but uses feature vectors instead of characters; matches natural classes
+		- syllable definitions
+			syllable composition, sonority hierarchy
+				sonority hierarchy amounts to a ranking among natural classes (independent, though necessarily informed by, the hierarchy of natural classes defined in the universe definition)
+		- word definitions
+			composing words out of syllables
+		- note: syllables and words are flat sequences of segments (fully-specified natural classes)
+	group:
+		- allows a single alias to stand for multiple things of the same kind; works for:
+			- natural classes (although it might make more sense to create a new natural class)
+			- sound changes
+			- syllable definitions
+	queries:
+		- generate
+			- syllable
+			- word
+		- apply sound change
+		- analyze word, syllable
+			- given sonority, likely syllable structure
+			- given syllable structure, likely sonority hierarchy
+
+universe definition syntax:
+	'<upper-level-name> <op> <lower-level-name>'
+		<upper-level-name> is the name of the natural class under which the new natural class is defined
+		<op> is either '!' or '?'
+			'?' indicates that a segment must express each of this class's children
+				e.g. place and means of articulation under 'ipa'
+			'!' indicates that  a segment can express only one of the class's children
+				e.g. labial and coronal under 'place of articulation'
+		<lower-level-name> is the name that will be given to the new class
+	'<op> <lower-level-name>'
+		used for top-level class
+
+sound change rule definition syntax:
+	'<from-match> / <to-match> / <left-env> _ <right-env>'
+		<rule-name>: name that is assigned to this rule
+		if <from-match> matches a segment within the environment, it will be overwritten with <to-match>
+		only those specifications (e.g. + coronal) in <to-match> will be overwritten
+
+feature vectors:
+	'[ +x, -y, ... ]'
+		where x and y are natural classes that this feature vector will attempt to match
+		basically, what you would expect
+
+syllable and word definitions:
+	syllable definitions are strings of feature vectors
+	word definitions are strings of syllable 

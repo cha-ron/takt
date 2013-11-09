@@ -1,0 +1,34 @@
+<unnamable-rule> ::= <universe-def> | <sonority-def>
+	<universe-def> ::= <universe-op> <name> | <name> <universe-op> <name> 
+		<universe-op> ::= "!" | "?"
+	<sonority-def> ::= <sonority-def> ">" <name> | <name> ">" <name>
+
+<name-assign> ::= <name> ":" <nameable-rule> | <name> ":" <group>
+	<nameable-rule> ::= <sound-change> | <syllable> | <word> | <group> | <feature-vec> | <environment> | <feature-vec-str>
+		<feature-vec> ::= <feature-vec-def> | <name>
+			<feature-vec-def> ::= "[" <feature-str> "]"
+				<feature-str> ::= <feature-str> "," <spec> | <spec>
+					<spec> ::= <spec-op> <name>
+						<spec-op> ::= "+" | "-"
+		<feat-vec-str> ::= <feat-vec-str-def> | <name>
+			<feat-vec-str-def> ::= <feat-vec-str> <feature-vec> | <feature-vec>
+		<environment> ::= <environment-def> | <name>
+			<environment-def> ::= <feat-vec-str> "_" <feat-vec-str>
+		<sound-change> ::= <sound-change-def> | <name>
+			<sound-change-def> ::= <feature-vec> "/" <feature-vec> "/" <environment>
+		<syllable> ::= <syllable-def> | <name>
+			<syllable-def> ::= <feat-vec-str>
+		<word> ::= <word-def> | <name>
+			<word-def> ::= <word-def> <syllable> | <syllable>
+	
+	<group> ::= <group-def> | <name>
+		<group-def> ::= "{" <nameable-rule-str> "}"
+			<name-str> ::= <nameable-rule-str> "," <nameable-rule> | <nameable-rule> 
+
+<query> ::= <generate> | <apply> | <analyze>
+	<generate> ::= 
+	<apply> ::=
+	<analyze> ::=
+
+<program> ::= <program> <statement> | <statement>
+	<statement> ::= <unnamable-rule> | <name-assign> | <query>
