@@ -1,3 +1,6 @@
+TODO:
+	describe typing system
+
 major features:
 	rules:
 		- universe definition
@@ -48,5 +51,25 @@ feature vectors:
 		basically, what you would expect
 
 syllable and word definitions:
-	syllable definitions are strings of feature vectors
-	word definitions are strings of syllable 
+	syllable definitions are strings of feature vectors (identical to feature vector strings used elsewhere)
+	word definitions are strings of syllables
+
+probabilities:
+	probabilities may be assigned to any namable rule (any sound change, syllable, word, feature vector, environment, or feature vector string definition)
+	probabilities may be any positive floating point number; competing probabilities will be normalized relative to each other
+
+	meanings of associated probabilities:
+		word: that a word matching that definition will be generated
+		syllable: that a syllable matching that definition will be generated
+		sound change: that a segment matching that environment will be changed
+		environment: that an environment matching that environment will register as matching
+		feature vector string: that a segment string that matches will register, or, that a syllable matching that feature vector string will be generated
+		feature vector: that a segment that matches will register, or, that a segment matching that feature vector will be generated
+
+generation:
+	'<number> @ <schema>'
+		returns a group of segments, syllables, or words generated according to the input schema
+
+application:
+	'<sound-change-rule> * <target>'
+		returns the target with the sound changes applied

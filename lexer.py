@@ -11,7 +11,10 @@ special_chars = {".":"seperator-statement",
 		"{":"begin-group",
 		"}":"end-group",
 		",":"seperator-list",
-		">":"seperator-sonority"}
+		">":"seperator-sonority"
+		"#":"seperator-probability"
+		"@":"seperator-generate"
+		"*":"seperator-apply"}
 null_type = "null"
 name_type = "name"
 

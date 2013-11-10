@@ -1,34 +1,40 @@
 <unnamable-rule> ::= <universe-def> | <sonority-def>
-	<universe-def> ::= <universe-op> <name> | <name> <universe-op> <name> 
+	<universe-def> ::= (<name>) <universe-op> <name> 
 		<universe-op> ::= "!" | "?"
 	<sonority-def> ::= <sonority-def> ">" <name> | <name> ">" <name>
 
-<name-assign> ::= <name> ":" <nameable-rule> | <name> ":" <group>
-	<nameable-rule> ::= <sound-change> | <syllable> | <word> | <group> | <feature-vec> | <environment> | <feature-vec-str>
-		<feature-vec> ::= <feature-vec-def> | <name>
+<name-assign> ::= <name> ":" { <nameable-rule> | <group> }
+	<prob-assign> ::= "#" <probability>
+
+	<nameable-rule> ::= <sound-change> | <syllable> | <word> | <feature-vec> | <environment> | <feature-vec-str>
+		<feature-vec> ::= { <feature-vec-def> | <name> | <group> } (<prob-assign>)
 			<feature-vec-def> ::= "[" <feature-str> "]"
-				<feature-str> ::= <feature-str> "," <spec> | <spec>
+				<feature-str> ::= (<feature-str> ",") <spec>
 					<spec> ::= <spec-op> <name>
 						<spec-op> ::= "+" | "-"
-		<feat-vec-str> ::= <feat-vec-str-def> | <name>
-			<feat-vec-str-def> ::= <feat-vec-str> <feature-vec> | <feature-vec>
-		<environment> ::= <environment-def> | <name>
+
+		<feat-vec-str> ::= { <feat-vec-str-def> | <name> | <group> } (<prob-assign>)
+			<feat-vec-str-def> ::= (<feat-vec-str>) <feature-vec>
+
+		<environment> ::= { <environment-def> | <name> | <group> } (<prob-assign>)
 			<environment-def> ::= <feat-vec-str> "_" <feat-vec-str>
-		<sound-change> ::= <sound-change-def> | <name>
+
+		<sound-change> ::= { <sound-change-def> | <name> | <group> } (<prob-assign>)
 			<sound-change-def> ::= <feature-vec> "/" <feature-vec> "/" <environment>
-		<syllable> ::= <syllable-def> | <name>
-			<syllable-def> ::= <feat-vec-str>
-		<word> ::= <word-def> | <name>
-			<word-def> ::= <word-def> <syllable> | <syllable>
+
+		<word> ::= { <word-def> | <name> | <group> } (<prob-assign>)
+			<word-def> ::= (<word-def>) <feat-vec-str>
 	
 	<group> ::= <group-def> | <name>
-		<group-def> ::= "{" <nameable-rule-str> "}"
-			<name-str> ::= <nameable-rule-str> "," <nameable-rule> | <nameable-rule> 
+		<group-def> ::= "{" <nameable-rule-str> "}" | "{" <query-str> "}"
+			<query-str> ::= (<query-str> ",") <query>
+			<nameable-rule-str> ::= (<nameable-rule-str> ",") <nameable-rule>
 
-<query> ::= <generate> | <apply> | <analyze>
-	<generate> ::= 
-	<apply> ::=
-	<analyze> ::=
+<query> ::= <generate> | <apply>
+	<target> ::= <feature-vec> | <feat-vec-str> | <group>
+	
+	<generate> ::= <number> "@" <target>
+	<apply> ::= <sound-change> "*" <target>
 
-<program> ::= <program> <statement> | <statement>
+<program> ::= (<program>) <statement> "."
 	<statement> ::= <unnamable-rule> | <name-assign> | <query>
