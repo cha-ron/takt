@@ -26,15 +26,19 @@
 			<word-def> ::= (<word-def>) <feat-vec-str>
 	
 	<group> ::= <group-def> | <name>
-		<group-def> ::= "{" <nameable-rule-str> "}" | "{" <query-str> "}"
+		<group-def> ::= "{" { <nameable-rule-str> | <query-str> | <op-cat-str> } "}"
 			<query-str> ::= (<query-str> ",") <query>
 			<nameable-rule-str> ::= (<nameable-rule-str> ",") <nameable-rule>
+			<op-cat-str> ::= (<op-cat-str> ",") <op-cat>
+
+<op-cat> ::= (<op-cat> "&") <op-cat-arg> "&" <op-cat-arg>
+	<op-cat-arg> ::= <name> | <query> | <group> | <feat-vec-str> | <feature-vec>
 
 <query> ::= <generate> | <apply>
 	<target> ::= <feature-vec> | <feat-vec-str> | <group>
 	
 	<generate> ::= <number> "@" <target>
-	<apply> ::= <sound-change> "*" <target>
+	<apply> ::= <sound-change> "*" { <target> | <op-cat> }
 
 <program> ::= (<program>) <statement> "."
 	<statement> ::= <unnamable-rule> | <name-assign> | <query>

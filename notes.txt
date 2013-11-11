@@ -1,6 +1,8 @@
 TODO:
 	describe typing system
 
+names: must be alphanumeric
+
 major features:
 	rules:
 		- universe definition

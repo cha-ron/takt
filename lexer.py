@@ -11,12 +11,14 @@ special_chars = {".":"seperator-statement",
 		"{":"begin-group",
 		"}":"end-group",
 		",":"seperator-list",
-		">":"seperator-sonority"
-		"#":"seperator-probability"
-		"@":"seperator-generate"
+		">":"seperator-sonority",
+		"&":"seperator-concatenate",
+		"#":"seperator-probability",
+		"@":"seperator-generate",
 		"*":"seperator-apply"}
 null_type = "null"
 name_type = "name"
+number_type = "number"
 
 # class to hold lex tokens
 class Token:
@@ -42,19 +44,28 @@ def lex(source):
 	statement_list = source.split(".")
 	for statement in statement_list:
 		tok_list = []
-		current_name = ""
+		current_multi = ""
 
 		for char in statement:
 			if char in special_chars:
-				if current_name != "":
-					tok_list += [Token(name_type, current_name)]
-					current_name = ""
+				if current_multi.isalnum():
+					tok_list += [Token(name_type, current_multi)]
+					current_multi = ""
+				if current_multi.isdecimal():
+					tok_list += [Token(number_type, current_multi)]
+					current_multi = ""
 
 				tok_list += [Token(special_chars[char], char)]
 			else:
-				current_name += char
+				current_multi += char
 
-		tok_list += [Token(name_type, current_name)]
+		if current_multi.isalnum():
+			tok_list += [Token(name_type, current_multi)]
+			current_multi = ""
+		if current_multi.isdecimal():
+			tok_list += [Token(number_type, current_multi)]
+			current_multi = ""
+
 		ret += [tok_list]
 
 	return ret
