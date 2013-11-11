@@ -37,6 +37,11 @@ def stripwhite(string):
 	for i in l:
 		ret += i
 
+def printStatementList(statement_list):
+	for statement in statement_list:
+		print(statement.typstr + ":'" + statement.text + "'")
+		print()
+
 # lexes a source string; returns an array of statements, which are arrays of tokens
 def lex(source):
 	ret = []
