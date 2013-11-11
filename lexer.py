@@ -36,39 +36,42 @@ def stripwhite(string):
 
 	for i in l:
 		ret += i
+	
+	return ret
 
 def printStatementList(statement_list):
 	for statement in statement_list:
-		print(statement.typstr + ":'" + statement.text + "'")
+		for token in statement:
+			print(token.typestr + ":'" + token.text + "'")
 		print()
 
 # lexes a source string; returns an array of statements, which are arrays of tokens
 def lex(source):
 	ret = []
 
-	statement_list = source.split(".")
+	statement_list = stripwhite(source).split(".")
 	for statement in statement_list:
 		tok_list = []
 		current_multi = ""
 
 		for char in statement:
 			if char in special_chars:
-				if current_multi.isalnum():
-					tok_list += [Token(name_type, current_multi)]
-					current_multi = ""
 				if current_multi.isdecimal():
 					tok_list += [Token(number_type, current_multi)]
+					current_multi = ""
+				if current_multi.isalnum():
+					tok_list += [Token(name_type, current_multi)]
 					current_multi = ""
 
 				tok_list += [Token(special_chars[char], char)]
 			else:
 				current_multi += char
 
-		if current_multi.isalnum():
-			tok_list += [Token(name_type, current_multi)]
-			current_multi = ""
 		if current_multi.isdecimal():
 			tok_list += [Token(number_type, current_multi)]
+			current_multi = ""
+		if current_multi.isalnum():
+			tok_list += [Token(name_type, current_multi)]
 			current_multi = ""
 
 		ret += [tok_list]
