@@ -1,3 +1,5 @@
+import errors
+
 special_chars = {".":"seperator-statement",
 		":":"seperator-name",
 		"?":"quantifier-universal",
@@ -15,7 +17,8 @@ special_chars = {".":"seperator-statement",
 		"&":"seperator-concatenate",
 		"#":"seperator-probability",
 		"@":"seperator-generate",
-		"*":"seperator-apply"}
+		"*":"seperator-apply",
+		"$":"seperator-allow"}
 null_type = "null"
 name_type = "name"
 number_type = "number"
@@ -45,10 +48,10 @@ def printStatementList(statement_list):
 			print(token.typestr + ":'" + token.text + "'")
 		print()
 
-def lexliteral(tl,cm):
+def lexliteral(tl,cm,curr=""):
 	if cm.isdecimal():
 		return (tl + [Token(number_type,cm)],"")
-	if cm.isalnum():
+	elif cm.isalnum():
 		return (tl + [Token(name_type,cm)],"")
 	else:
 		return (tl,cm)
@@ -75,3 +78,21 @@ def lex(source):
 		ret += [tok_list]
 
 	return ret
+
+# reconstructs the string-form of a statement from a token stream
+def reconstructStatementString(statement):
+	ret = statement[0].text
+	for token in statement[1:]:
+		ret += (" " + token.text)
+
+	return ret
+
+def assignNameSpecs(statement, names):
+	for token in statement:
+		if token.typestr == name_type:
+			if token != statement[0]:
+				if token.text not in names:
+					errors.name_error(reconstructStatementString(statement, token.text))
+					return None
+				else:
+					token.typestr += ("-" + names[token.text].typestr)

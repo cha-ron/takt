@@ -1,7 +1,8 @@
-<unnamable-rule> ::= <universe-def> | <sonority-def>
+<unnamable-rule> ::= <universe-def> | <sonority-def> | <language-allowance>
 	<universe-def> ::= <name> <universe-op> ( <name> ) 
 		<universe-op> ::= <quantifier-existential> | <quantifier-universal>
 	<sonority-def> ::= ( <sonority-def> <seperator-sonority> ) <name> <seperator-sonority> <name>
+	<language-allowance> ::= <seperator-allow> { <feature-vec> | <group> | <name> }
 
 <name-assign> ::= <name> <seperator-name> { <nameable-rule> | <group> }
 	<prob-assign> ::= <seperator-probability> <probability>
