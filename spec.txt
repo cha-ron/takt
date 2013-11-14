@@ -1,12 +1,12 @@
 <unnamable-rule> ::= <universe-def> | <sonority-def>
 	<universe-def> ::= (<name>) <universe-op> <name> 
 		<universe-op> ::= "!" | "?"
-	<sonority-def> ::= <sonority-def> ">" <name> | <name> ">" <name>
+	<sonority-def> ::= (<sonority-def> ">") <name> ">" <name>
 
 <name-assign> ::= <name> ":" { <nameable-rule> | <group> }
 	<prob-assign> ::= "#" <probability>
 
-	<nameable-rule> ::= <sound-change> | <syllable> | <word> | <feature-vec> | <environment> | <feature-vec-str>
+	<nameable-rule> ::= <sound-change> | <syllable> | <feature-vec> | <environment> | <feature-vec-str>
 		<feature-vec> ::= { <feature-vec-def> | <name> | <group> } (<prob-assign>)
 			<feature-vec-def> ::= "[" <feature-str> "]"
 				<feature-str> ::= (<feature-str> ",") <spec>
@@ -21,9 +21,6 @@
 
 		<sound-change> ::= { <sound-change-def> | <name> | <group> } (<prob-assign>)
 			<sound-change-def> ::= <feature-vec> "/" <feature-vec> "/" <environment>
-
-		<word> ::= { <word-def> | <name> | <group> } (<prob-assign>)
-			<word-def> ::= (<word-def>) <feat-vec-str>
 	
 	<group> ::= <group-def> | <name>
 		<group-def> ::= "{" { <nameable-rule-str> | <query-str> | <op-cat-str> } "}"
@@ -35,7 +32,7 @@
 	<op-cat-arg> ::= <name> | <query> | <group> | <feat-vec-str> | <feature-vec>
 
 <query> ::= <generate> | <apply>
-	<target> ::= <feature-vec> | <feat-vec-str> | <group>
+	<target> ::= <feature-vec> | <feat-vec-str> | <group> | <name>
 	
 	<generate> ::= <number> "@" <target>
 	<apply> ::= <sound-change> "*" { <target> | <op-cat> }

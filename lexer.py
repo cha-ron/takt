@@ -25,7 +25,7 @@ class Token:
 	typestr = null_type
 	text = ""
 
-	def __init__(self, typestr_in, text_in):
+	def __init__(self, typestr_in=null_type, text_in=""):
 		self.typestr = typestr_in
 		self.text = text_in
 
@@ -45,6 +45,15 @@ def printStatementList(statement_list):
 			print(token.typestr + ":'" + token.text + "'")
 		print()
 
+def lexliteral(tl,cm):
+	if cm.isdecimal():
+		return (tl + [Token(number_type,cm)],"")
+	if cm.isalnum():
+		return (tl + [Token(name_type,cm)],"")
+	else:
+		return (tl,cm)
+
+
 # lexes a source string; returns an array of statements, which are arrays of tokens
 def lex(source):
 	ret = []
@@ -56,24 +65,13 @@ def lex(source):
 
 		for char in statement:
 			if char in special_chars:
-				if current_multi.isdecimal():
-					tok_list += [Token(number_type, current_multi)]
-					current_multi = ""
-				if current_multi.isalnum():
-					tok_list += [Token(name_type, current_multi)]
-					current_multi = ""
+				tok_list,current_multi = lexliteral(tok_list,current_multi)
 
 				tok_list += [Token(special_chars[char], char)]
 			else:
 				current_multi += char
 
-		if current_multi.isdecimal():
-			tok_list += [Token(number_type, current_multi)]
-			current_multi = ""
-		if current_multi.isalnum():
-			tok_list += [Token(name_type, current_multi)]
-			current_multi = ""
-
+		tok_list,current_multi = lexliteral(tok_list,current_multi)
 		ret += [tok_list]
 
 	return ret

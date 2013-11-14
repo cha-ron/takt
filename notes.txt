@@ -30,7 +30,7 @@ major features:
 			- given syllable structure, likely sonority hierarchy
 
 universe definition syntax:
-	'<upper-level-name> <op> <lower-level-name>'
+	'<lowerl-level-name> <op> <upper-level-name>'
 		<upper-level-name> is the name of the natural class under which the new natural class is defined
 		<op> is either '!' or '?'
 			'?' indicates that a segment must express each of this class's children
@@ -38,7 +38,7 @@ universe definition syntax:
 			'!' indicates that  a segment can express only one of the class's children
 				e.g. labial and coronal under 'place of articulation'
 		<lower-level-name> is the name that will be given to the new class
-	'<op> <lower-level-name>'
+	'<lower-level-name> <op>'
 		used for top-level class
 
 sound change rule definition syntax:
