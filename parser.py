@@ -13,9 +13,9 @@ def getindices(c,st,en):
 	return (c.index(st),c.index(en))
 
 def tripart(c,s,e):
-	return (c[:s],c[s+1:e],c[e:])
+	return (c[:s],c[s+1:e],c[e+1:])
 
-def atp(c,st,en) # = auto tripart
+def atp(c,st,en): # = auto tripart
 	s,e = getindices(c,st,en)
 	return tripart(c,s,e)
 
@@ -25,7 +25,7 @@ def parseGramTail(tail):
 	ret.append(tail.copy())
 
 	if (ocurl in tail) or (pipe in tail) or (opern in tail):
-		stack = ret.pop()
+		stack = [ret.pop()]
 
 		while len(stack) != 0:
 			curr = stack.pop()
@@ -45,7 +45,7 @@ def parseGramTail(tail):
 				bef,mid,aft = atp(curr, ocurl, ccurl)
 
 				for part in procAlts(mid):
-					stack.append(bef + part + mid)
+					stack.append(bef + part + aft)
 
 				continue
 
@@ -63,10 +63,11 @@ def procAlts(stream):
 	while len(end) != 0:
 		if pipe in end:
 			i = end.index(pipe)
-			ret.append(end[:s])
-			end = end[s+2:]
+			ret.append(end[:i])
+			end = end[i+1:]
 		else:
 			ret.append(end)
+			break
 
 	return ret
 
@@ -78,5 +79,11 @@ def parseGrammar(grammar_loc):
 
 	for line in grammar:
 		splitline = line.split()
-		head = splitline[0]
-		tail = parseGramTail(splitline[2:])
+		print(splitline)
+		if splitline != []:
+			head = splitline[0]
+			tail = parseGramTail(splitline[2:])
+	
+			retgram[head] = tail
+
+	return retgram
