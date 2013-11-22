@@ -1,42 +1,46 @@
-<unnamable-rule> ::= <universe-def> | <sonority-def> | <language-allowance>
-	<universe-def> ::= <name> <universe-op> ( <name> ) 
-		<universe-op> ::= <quantifier-existential> | <quantifier-universal>
-	<sonority-def> ::= ( <sonority-def> <seperator-sonority> ) <name> <seperator-sonority> <name>
-	<language-allowance> ::= <seperator-allow> { <feature-vec> | <group> | <name> }
+universe-def ::= name { quantifier-existential | quantifier-universal } ( name-natural-class ) 
+sonority-def ::= { sonority-def | name-natural-class } seperator-sonority name-natural-class
+language-allowance ::= seperator-allow feature-vec
 
-<name-assign> ::= <name> <seperator-name> { <nameable-rule> | <group> }
-	<prob-assign> ::= <seperator-probability> <probability>
+name-assign ::= name seperator-name { sound-change | feature-vec | environment | feat-vec-str }
+	prob-assign ::= seperator-probability probability
 
-	<nameable-rule> ::= <sound-change> | <feature-vec> | <environment> | <feat-vec-str>
-		<feature-vec> ::= { <feature-vec-def> | <name> | <group> } ( <prob-assign> )
-			<feature-vec-def> ::= <begin-feature-vector> <feature-str> <end-feature-vector>
-				<feature-str> ::= ( <feature-str> <seperator-list> ) <spec>
-					<spec> ::= <spec-op> <name>
-						<spec-op> ::= <feature-positive> | <feature-negative>
+	feature-vec ::= { feature-vec-def | name-feature-vec | group-feature-vec | query-feature-vec } ( prob-assign )
+		feature-vec-def ::= begin-feature-vector feature-str end-feature-vector
+			feature-str ::= ( feature-str seperator-list ) spec
+				spec ::= { feature-positive | feature-negative } name-natural-class
 
-		<feat-vec-str> ::= { <feat-vec-str-def> | <name> | <group> } ( <prob-assign> )
-			<feat-vec-str-def> ::= ( <feat-vec-str> ) <feature-vec> <feature-vec>
+	feat-vec-str ::= { feat-vec-str-def | name-feat-vec-str | group-feat-vec-str | op-cat | query-feat-vec-str } ( prob-assign )
+		feat-vec-str-def ::= { feat-vec-str | feature-vec } feature-vec
 
-		<environment> ::= { <environment-def> | <name> | <group> } ( <prob-assign> )
-			<environment-def> ::= { <feat-vec-str> | <feature-vec> } <seperator-environment> { <feat-vec-str> | <feature-vec> }
+	environment ::= { environment-def | name-environment | group-environment } ( prob-assign )
+		environment-def ::= { feat-vec-str | feature-vec } seperator-environment { feat-vec-str | feature-vec }
 
-		<sound-change> ::= { <sound-change-def> | <name> | <group> } ( <prob-assign> )
-			<sound-change-def> ::= <feature-vec> <seperator-sound-change> <feature-vec> <seperator-sound-change> <environment>
+	sound-change ::= { sound-change-def | name-sound-change | group-sound-change } ( prob-assign )
+		sound-change-def ::= feature-vec seperator-sound-change feature-vec seperator-sound-change environment
 	
-	<group> ::= <group-def> | <name>
-		<group-def> ::= <begin-group> { <nameable-rule-str> | <query-str> | <op-cat-str> } <end-group>
-			<query-str> ::= ( <query-str> <seperator-list> ) <query>
-			<nameable-rule-str> ::= ( <nameable-rule-str> <seperator-list> ) <nameable-rule>
-			<op-cat-str> ::= ( <op-cat-str> <seperator-list> ) <op-cat>
+group-feature-vec ::= begin-group feature-vec-str end-group
+	feature-vec-str ::= ( feature-vec-str ) feature-vec seperator-list
 
-<op-cat> ::= ( <op-cat> <seperator-concatenate> ) <op-cat-arg> <seperator-concatenate> <op-cat-arg>
-	<op-cat-arg> ::= <name> | <query> | <group> | <feat-vec-str> | <feature-vec>
+group-feat-vec-str ::= begin-group feat-vec-str-str end-group
+	feat-vec-str-str ::= ( feat-vec-str-str ) feat-vec-str seperator-list
 
-<query> ::= <generate> | <apply>
-	<target> ::= <feature-vec> | <feat-vec-str> | <group> | <name>
-	
-	<generate> ::= <number> <seperator-generate> <target>
-	<apply> ::= <sound-change> <seperator-apply> { <target> | <op-cat> }
+group-environment ::= begin-group environment-str end-group
+	environment-str ::= ( environment-str ) environment seperator-list
 
-<program> ::= ( <program> ) <statement> <seperator-statement>
-	<statement> ::= <unnamable-rule> | <name-assign> | <query>
+group-sound-change ::= begin-group sound-change-str end-group
+	sound-change-str ::= ( sound-change-str ) sound-change seperator-list
+
+op-cat ::= { op-cat | feat-vec-str | feature-vec } seperator-concatenate { feat-vec-str | feature-vec }
+
+query ::= seperator-query { query-feature-vec | query-feat-vec-str } 
+
+query-feature-vec ::= generate-feature-vec | apply-feature-vec
+	generate ::= number seperator-generate feature-vec
+	apply ::= sound-change seperator-apply feature-vec
+
+query-feat-vec-str ::= generate-feat-vec-str | apply-feat-vec-str
+	generate ::= number seperator-generate feat-vec-str
+	apply ::= sound-change seperator-apply feat-vec-str
+
+statement ::= universe-def | sonority-def | language-allowance | name-assign | query
