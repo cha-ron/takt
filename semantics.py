@@ -1,8 +1,13 @@
-class NaturalClass:
+# for storing the phonetic universe 
+class Universe:
 	def __init__(self, name_in="", exist_in=False, contents_in=[]):
 		self.name = name_in
 		self.exist = exist_in
 		self.contents = contents_in
+
+	def newUniverse(name_in, exist_in):
+		return NaturalClass(name_in, exist_in)
+
 
 class Feature:
 	def __init__(self, name_in="", spec_in=False):

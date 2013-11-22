@@ -18,7 +18,8 @@ special_chars = {".":"seperator-statement",
 		"#":"seperator-probability",
 		"@":"seperator-generate",
 		"*":"seperator-apply",
-		"$":"seperator-allow"}
+		"$":"seperator-allow",
+		"%":"seperator-query"}
 null_type = "null"
 name_type = "name"
 number_type = "number"
@@ -31,6 +32,9 @@ class Token:
 	def __init__(self, typestr_in=null_type, text_in=""):
 		self.typestr = typestr_in
 		self.text = text_in
+	
+	def __str__(self):
+		return "(" + self.typestr + ": '" + self.text + "'" + ")"
 
 # strips all (including interior) whitespace from a string
 def stripwhite(string):
@@ -56,6 +60,11 @@ def lexliteral(tl,cm,curr=""):
 	else:
 		return (tl,cm)
 
+def printss(ss):
+	for statement in ss:
+		for literal in statement:
+			print(literal)
+		print()
 
 # lexes a source string; returns an array of statements, which are arrays of tokens
 def lex(source):
@@ -87,12 +96,17 @@ def reconstructStatementString(statement):
 
 	return ret
 
+# gives types to names
+# 'names' is named-entities dictionary
 def assignNameSpecs(statement, names):
 	for token in statement:
 		if token.typestr == name_type:
-			if token != statement[0]:
+			# undefined names may only appear statement-initially behind name-assignment seperators
+			if not ((token == statement[0]) and (statement[1].typestr in [special_chars[":"], special_chars["!"], special_chars["?"]])):
 				if token.text not in names:
-					errors.name_error(reconstructStatementString(statement, token.text))
+					errors.name_error(reconstructStatementString(statement), token.text)
 					return None
 				else:
 					token.typestr += ("-" + names[token.text].typestr)
+	return statement
+

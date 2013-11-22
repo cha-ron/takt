@@ -1,13 +1,42 @@
-import lexer
-
 ocurl = "{"
 ccurl = "}"
 opern = "("
 cpern = ")"
 pipe = "|"
 
-def parseSource(source):
-	return parse(lexer.lex(source))
+# partitions a range from s to e into m slots
+# (e - s + 1) >= m
+def partition(s, e, m):
+	l = e - s + 1
+	if (l == 1) or (m == 1):
+		return [[(s,e+1)]]
+	if l == m:
+		return [[(i,i+1) for i in range(s, e+1)]]
+	else:
+		ret = []
+
+		for i in range(l - m + 1):
+			start = [(s,s+i+1)]
+			ends = partition(s+i+1, e, m-1)
+
+			for end in ends:
+				ret += [start + end]
+
+		return ret
+
+def partset(s, m):
+	parts = partition(0,len(s)-1, m)
+	ret = []
+
+	for p in parts:
+		np = []
+
+		for rang in p:
+			np += [s[rang[0]:rang[1]]]
+
+		ret += [np]
+
+	return ret
 
 def getindices(c,st,en):
 	return (c.index(st),c.index(en))
@@ -79,7 +108,6 @@ def parseGrammar(grammar_loc):
 
 	for line in grammar:
 		splitline = line.split()
-		print(splitline)
 		if splitline != []:
 			head = splitline[0]
 			tail = parseGramTail(splitline[2:])
@@ -87,3 +115,17 @@ def parseGrammar(grammar_loc):
 			retgram[head] = tail
 
 	return retgram
+
+def invertGrammar(grammar):
+	ret = {}
+
+	for key in grammar:
+		for parse in grammar[key]:
+			p = tuple(parse)
+
+			if p in ret:
+				print(str(p) + " is ambiguous")
+
+			ret[p] = key
+
+	return ret
