@@ -71,6 +71,10 @@ def lex(source):
 	ret = []
 
 	statement_list = stripwhite(source).split(".")
+
+	if statement_list[-1] == '':
+		statement_list = statement_list[:-1]
+
 	for statement in statement_list:
 		tok_list = []
 		current_multi = ""

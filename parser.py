@@ -4,6 +4,49 @@ opern = "("
 cpern = ")"
 pipe = "|"
 
+# pretty print a parse tree
+def pppt(t,i=0):
+	print(('\t'*i) + "( " + t[0], end='')
+
+	if type(t[1]) == type([]):
+		print()
+		for q in t[1]:
+			pppt(q,i+1)
+		print(('\t'*i) + ")")
+	else:
+		print(" '" + t[1] + "' )")
+
+# recursively checks if the partition matches the rule
+def derives(partition, rule, grammar):
+	lp = len(partition)
+
+	if rule not in grammar: # if matching a single token to a terminal
+		if lp == 1 and (partition[0].typestr == rule):
+			return (partition[0].typestr, partition[0].text)
+		else: # more than one token can never match a single terminal
+			return False
+	else: # matching multiple tokens to a nonterminal: try and match partitions to what that rule outputs
+		for rulelist in grammar[rule]: # rules often expand into more than one form; this looks at each of them
+			rll = len(rulelist)
+
+			if lp >= rll: # n tokens cannot be matched onto m rules if m > n
+				parts = partset(partition, rll) # all of the partitions into rll slots
+
+				for p in parts: # iterate over possible partitions
+					combs = []
+
+					for i in range(rll):
+						combs += [derives(p[i], rulelist[i], grammar)]
+					if False not in combs:
+						return (rule, combs)
+					else:
+						continue
+				
+	return False
+					
+
+
+
 # partitions a range from s to e into m slots
 # (e - s + 1) >= m
 def partition(s, e, m):
