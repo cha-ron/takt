@@ -16,6 +16,17 @@ def pppt(t,i=0):
 	else:
 		print(" '" + t[1] + "' )")
 
+def ntmatch(rulelist, partition, grammar):
+	b = True
+
+	for i in range(len(rulelist)):
+		r = rulelist[i]
+
+		if r not in grammar:
+			b = (b and (derives(partition[i], r, grammar) != False))
+
+	return b
+
 # recursively checks if the partition matches the rule
 def derives(partition, rule, grammar):
 	lp = len(partition)
@@ -34,6 +45,9 @@ def derives(partition, rule, grammar):
 
 				for p in parts: # iterate over possible partitions
 					combs = []
+
+					if not ntmatch(rulelist, p, grammar):
+						continue
 
 					for i in range(rll):
 						combs += [derives(p[i], rulelist[i], grammar)]
@@ -172,3 +186,56 @@ def invertGrammar(grammar):
 			ret[p] = key
 
 	return ret
+
+def massage(ptree, grammar, punctuation):
+	rrules = findRecursiveRules(grammar)
+
+	ptree = flattenRecursives(ptree, rrules)[0]
+	ptree = removePunctuation(ptree, punctuation)[0]
+
+	return ptree
+
+def removePunctuation(ptree, punctuation):
+	if ptree[0].startswith(tuple(punctuation)):
+		return []
+	elif type(ptree[1]) == type([]):
+		l = ptree[1].copy()
+		r = []
+
+		while len(l) != 0:
+			r = removePunctuation(l.pop(), punctuation) + r
+
+		return [(ptree[0], r)]
+	else:
+		return [ptree]
+
+def findRecursiveRules(grammar):
+	ret = {}
+
+	for rule in grammar:
+		for r in grammar[rule]:
+			if rule in r:
+				if rule in ret:
+					ret[rule] += [r]
+				else:
+					ret[rule] = [r]
+
+	return ret
+
+# flattens recursive definitions (i.e. how i allowed n-length strings of things in the grammar)
+# might be scrapped if i can get the parser to do this itself
+# which might provide some pretty big savings in time (i think the recursive definitions are the major hangup at the moment)
+def flattenRecursives(ptree, rrules):
+	if type(ptree[1]) == type(""): # if terminal
+		return [ptree]
+	else:
+		l = ptree[1].copy()
+		r = []
+
+		while len(l) != 0:
+			r = flattenRecursives(l.pop(), rrules) + r
+
+		if ptree[0] in rrules:
+			return r
+		else:
+			return [(ptree[0], r)]

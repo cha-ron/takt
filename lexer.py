@@ -14,8 +14,8 @@ special_chars = {".":"seperator-statement",
 		"}":"end-group",
 		",":"seperator-list",
 		">":"seperator-sonority",
-		"&":"seperator-concatenate",
 		"#":"seperator-probability",
+		"&":"seperator-concatenate",
 		"@":"seperator-generate",
 		"*":"seperator-apply",
 		"$":"seperator-allow",
@@ -23,6 +23,8 @@ special_chars = {".":"seperator-statement",
 null_type = "null"
 name_type = "name"
 number_type = "number"
+
+punctuation = ["seperator", "begin", "end"]
 
 # class to hold lex tokens
 class Token:
