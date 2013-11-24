@@ -1,5 +1,6 @@
 universe-def ::= name { quantifier-existential | quantifier-universal } ( name-natural-class ) 
-sonority-def ::= { sonority-def | name-natural-class } seperator-sonority name-natural-class
+sonority-def ::= sonority-str
+	sonority-str ::= { sonority-str | name-natural-class } { sonority-up | sonority-down } name-natural-class
 language-allowance ::= seperator-allow feature-vec
 
 name-assign ::= name seperator-name { sound-change | feature-vec | environment | feat-vec-str }
@@ -10,8 +11,9 @@ name-assign ::= name seperator-name { sound-change | feature-vec | environment |
 			feature-str ::= ( feature-str seperator-list ) spec
 				spec ::= { feature-positive | feature-negative } name-natural-class
 
-	feat-vec-str ::= { feat-vec-str-def | name-feat-vec-str | group-feat-vec-str | op-cat | query-feat-vec-str } ( prob-assign )
-		feat-vec-str-def ::= { feat-vec-str | feature-vec } feature-vec
+	feat-vec-str ::= { feat-vec-str-def | name-feat-vec-str | group-feat-vec-str | query-feat-vec-str | op-cat } ( prob-assign )
+		feat-vec-str-def ::= { feat-vec-str-def | feature-vec } feature-vec
+		op-cat ::= feat-vec-str seperator-concatenate feat-vec-str
 
 	environment ::= { environment-def | name-environment | group-environment } ( prob-assign )
 		environment-def ::= { feat-vec-str | feature-vec } seperator-environment { feat-vec-str | feature-vec }
@@ -31,16 +33,14 @@ group-environment ::= begin-group environment-str end-group
 group-sound-change ::= begin-group sound-change-str end-group
 	sound-change-str ::= ( sound-change-str ) sound-change seperator-list
 
-op-cat ::= { op-cat | feat-vec-str | feature-vec } seperator-concatenate { feat-vec-str | feature-vec }
-
-query ::= seperator-query { query-feature-vec | query-feat-vec-str } 
+query ::= seperator-query { query-feature-vec | query-feat-vec-str }
 
 query-feature-vec ::= generate-feature-vec | apply-feature-vec
-	generate ::= number seperator-generate feature-vec
-	apply ::= sound-change seperator-apply feature-vec
+	generate-feature-vec ::= number seperator-generate feature-vec
+	apply-feature-vec ::= sound-change seperator-apply feature-vec
 
 query-feat-vec-str ::= generate-feat-vec-str | apply-feat-vec-str
-	generate ::= number seperator-generate feat-vec-str
-	apply ::= sound-change seperator-apply feat-vec-str
+	generate-feat-vec-str ::= number seperator-generate feat-vec-str
+	apply-feat-vec-str ::= sound-change seperator-apply feat-vec-str
 
 statement ::= universe-def | sonority-def | language-allowance | name-assign | query

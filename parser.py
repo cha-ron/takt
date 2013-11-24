@@ -1,3 +1,6 @@
+import errors
+from lexer import reconstructStatementString
+
 ocurl = "{"
 ccurl = "}"
 opern = "("
@@ -26,6 +29,15 @@ def ntmatch(rulelist, partition, grammar):
 			b = (b and (derives(partition[i], r, grammar) != False))
 
 	return b
+
+# parses a statement
+def parse(statement, grammar):
+	p = derives(statement, 'statement', grammar)
+
+	if p == False:
+		errors.parse_error(reconstructStatementString(statement))
+	else:
+		return p
 
 # recursively checks if the partition matches the rule
 def derives(partition, rule, grammar):
