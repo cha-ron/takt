@@ -4,7 +4,7 @@ sonority-def ::= sonority-str
 language-allowance ::= seperator-allow feature-vec
 
 name-assign ::= name seperator-name { sound-change | feature-vec | environment | feat-vec-str }
-	prob-assign ::= seperator-probability probability
+	prob-assign ::= seperator-probability number
 
 	feature-vec ::= { feature-vec-def | name-feature-vec | group-feature-vec | query-feature-vec } ( prob-assign )
 		feature-vec-def ::= begin-feature-vector feature-str end-feature-vector
